@@ -1,0 +1,1 @@
+ALTER TABLE algalog.cliente CHANGE telefone fone varchar(20) NOT NULL;
