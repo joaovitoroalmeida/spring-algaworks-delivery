@@ -1,4 +1,4 @@
-package com.algaworks.entrega.api.exception.handler;
+package com.algaworks.entrega.api.controller.exception.handler;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
