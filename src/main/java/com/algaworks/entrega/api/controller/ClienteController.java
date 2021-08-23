@@ -2,7 +2,9 @@ package com.algaworks.entrega.api.controller;
 
 import com.algaworks.entrega.api.domain.model.Cliente;
 import com.algaworks.entrega.api.domain.repository.ClienteRepository;
+import com.algaworks.entrega.api.domain.service.CatalogoClienteService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +26,7 @@ import java.util.List;
 public class ClienteController {
 
     private ClienteRepository clienteRepository;
+    private CatalogoClienteService catalogoClienteService;
 
     @GetMapping
     public List<Cliente> listarClientes(){
@@ -40,7 +43,7 @@ public class ClienteController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente criarCliente(@Valid @RequestBody Cliente cliente){
-        return clienteRepository.save(cliente);
+        return catalogoClienteService.salvar(cliente);
     }
 
     @PutMapping("{clienteId}")
@@ -48,7 +51,7 @@ public class ClienteController {
         return clienteRepository.findById(clienteId)
                 .map(client -> {
                     cliente.setId(client.getId());
-                    return clienteRepository.save(cliente);
+                    return catalogoClienteService.salvar(cliente);
                 })
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -60,7 +63,7 @@ public class ClienteController {
         if (!clienteRepository.existsById(clienteId))
             return ResponseEntity.notFound().build();
 
-        clienteRepository.deleteById(clienteId);
+        catalogoClienteService.excluir(clienteId);
         return ResponseEntity.noContent().build();
     }
 }
