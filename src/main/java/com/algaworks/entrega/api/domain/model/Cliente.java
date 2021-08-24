@@ -1,5 +1,6 @@
 package com.algaworks.entrega.api.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Getter
 @Setter
 @Entity

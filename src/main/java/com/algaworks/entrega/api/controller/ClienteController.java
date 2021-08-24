@@ -3,7 +3,6 @@ package com.algaworks.entrega.api.controller;
 import com.algaworks.entrega.api.domain.model.Cliente;
 import com.algaworks.entrega.api.domain.repository.ClienteRepository;
 import com.algaworks.entrega.api.domain.service.CatalogoClienteService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("clientes")
 public class ClienteController {
 
-    private ClienteRepository clienteRepository;
-    private CatalogoClienteService catalogoClienteService;
+    private final ClienteRepository clienteRepository;
+    private final CatalogoClienteService catalogoClienteService;
 
     @GetMapping
     public List<Cliente> listarClientes(){
