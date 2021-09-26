@@ -1,5 +1,6 @@
 package com.algaworks.entrega.api.domain.model;
 
+import com.algaworks.entrega.api.domain.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -21,6 +23,7 @@ import javax.validation.constraints.Size;
 @Entity
 public class Cliente {
 
+    @NotNull(groups = ValidationGroups.ClienteId.class)
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
