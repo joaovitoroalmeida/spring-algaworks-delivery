@@ -3,6 +3,8 @@ package com.algaworks.entrega.api.controller;
 import com.algaworks.entrega.api.domain.model.Entrega;
 import com.algaworks.entrega.api.domain.repository.EntregaRepository;
 import com.algaworks.entrega.api.domain.service.SolicitacaoEntregaService;
+import com.algaworks.entrega.api.model.DestinatarioResponse;
+import com.algaworks.entrega.api.model.EntregaResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,9 +41,25 @@ public class EntregaController {
 
     @GetMapping("{entregaId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Entrega> buscar(@PathVariable Long entregaId){
+    public ResponseEntity<EntregaResponse> buscar(@PathVariable Long entregaId){
         return entregaRepository.findById(entregaId)
-                .map(ResponseEntity::ok)
+                .map(entrega -> {
+                    EntregaResponse entregaResponse = new EntregaResponse();
+                    entregaResponse.setId(entrega.getId());
+                    entregaResponse.setStatusEntrega(entrega.getStatus());
+                    entregaResponse.setTaxaEntrega(entrega.getTaxa());
+                    entregaResponse.setDataFinalizacao(entrega.getDataFinalizacao());
+                    entregaResponse.setDataPedido(entrega.getDataPedido());
+                    entregaResponse.setNomeCliente(entrega.getCliente().getNome());
+                    entregaResponse.setDataFinalizacao(entrega.getDataFinalizacao());
+                    entregaResponse.setDestinatario(new DestinatarioResponse());
+                    entregaResponse.getDestinatario().setNome(entrega.getDestinatario().getNome());
+                    entregaResponse.getDestinatario().setBairro(entrega.getDestinatario().getBairro());
+                    entregaResponse.getDestinatario().setComplemento(entrega.getDestinatario().getComplemento());
+                    entregaResponse.getDestinatario().setLogradouro(entrega.getDestinatario().getLogradouro());
+                    entregaResponse.getDestinatario().setNumero(entrega.getDestinatario().getNumero());
+                    return ResponseEntity.ok(entregaResponse);
+                })
                 .orElse(ResponseEntity.notFound().build());
     }
 }
