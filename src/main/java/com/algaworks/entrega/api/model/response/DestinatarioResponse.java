@@ -1,4 +1,4 @@
-package com.algaworks.entrega.api.model;
+package com.algaworks.entrega.api.model.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;

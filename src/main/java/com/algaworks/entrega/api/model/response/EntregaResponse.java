@@ -1,4 +1,4 @@
-package com.algaworks.entrega.api.model;
+package com.algaworks.entrega.api.model.response;
 
 import com.algaworks.entrega.api.domain.model.StatusEntrega;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -14,7 +14,7 @@ import java.time.OffsetDateTime;
 public class EntregaResponse {
 
     private Long id;
-    private String nomeCliente;
+    private ClienteResumoResponse cliente;
     private DestinatarioResponse destinatario;
     private BigDecimal taxaEntrega;
     private StatusEntrega statusEntrega;
