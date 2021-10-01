@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +22,7 @@ public class SolicitacaoEntregaService {
         Cliente cliente = catalogoClienteService.buscar(entrega.getCliente().getId());
 
         entrega.setStatus(StatusEntrega.PENDENTE);
-        entrega.setDataPedido(LocalDateTime.now());
+        entrega.setDataPedido(OffsetDateTime.now());
         entrega.setCliente(cliente);
         return entregaRepository.save(entrega);
     }

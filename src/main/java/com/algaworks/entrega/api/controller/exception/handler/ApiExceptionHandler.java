@@ -1,5 +1,6 @@
 package com.algaworks.entrega.api.controller.exception.handler;
 
+import com.algaworks.entrega.api.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.entrega.api.domain.exception.NegocioException;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +35,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         MensagemErro mensagemErro = MensagemErro.builder()
                 .status(status.value())
-                .dataHora(LocalDateTime.now())
+                .dataHora(OffsetDateTime.now())
                 .titulo("Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente")
                 .campos(campos)
                 .build();
@@ -47,7 +48,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         MensagemErro mensagemErro = MensagemErro.builder()
                 .status(status.value())
-                .dataHora(LocalDateTime.now())
+                .dataHora(OffsetDateTime.now())
+                .titulo(exception.getMessage())
+                .build();
+
+        return handleExceptionInternal(exception, mensagemErro, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(EntidadeNaoEncontradaException.class)
+    public ResponseEntity<Object> handleEntidadeNaoEncontrada(EntidadeNaoEncontradaException exception, WebRequest request){
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        MensagemErro mensagemErro = MensagemErro.builder()
+                .status(status.value())
+                .dataHora(OffsetDateTime.now())
                 .titulo(exception.getMessage())
                 .build();
 
