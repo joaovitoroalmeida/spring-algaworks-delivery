@@ -3,6 +3,9 @@ package com.algaworks.entrega.api.controller;
 import com.algaworks.entrega.api.domain.model.Cliente;
 import com.algaworks.entrega.api.domain.repository.ClienteRepository;
 import com.algaworks.entrega.api.domain.service.CatalogoClienteService;
+import com.algaworks.entrega.api.mapper.ClienteMapper;
+import com.algaworks.entrega.api.model.request.ClienteRequest;
+import com.algaworks.entrega.api.model.response.ClienteResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,33 +27,38 @@ import java.util.List;
 @RequestMapping("clientes")
 public class ClienteController {
 
+    private final ClienteMapper clienteMapper;
     private final ClienteRepository clienteRepository;
     private final CatalogoClienteService catalogoClienteService;
 
     @GetMapping
-    public List<Cliente> listarClientes(){
-        return clienteRepository.findAll();
+    public List<ClienteResponse> listarClientes(){
+        return clienteMapper.toListResponse(clienteRepository.findAll());
     }
 
     @GetMapping("{clienteId}")
-    public ResponseEntity<Cliente> buscarClienteById(@PathVariable Long clienteId){
+    public ResponseEntity<ClienteResponse> buscarClienteById(@PathVariable Long clienteId){
+
         return clienteRepository.findById(clienteId)
+                .map(clienteMapper::toResponse)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente criarCliente(@Valid @RequestBody Cliente cliente){
-        return catalogoClienteService.salvar(cliente);
+    public ClienteResponse criarCliente(@Valid @RequestBody ClienteRequest cliente){
+        Cliente clienteEntityResponse = catalogoClienteService.salvar(clienteMapper.toEntity(cliente));
+        return clienteMapper.toResponse(clienteEntityResponse);
     }
 
     @PutMapping("{clienteId}")
-    public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long clienteId, @Valid @RequestBody Cliente cliente){
+    public ResponseEntity<ClienteResponse> atualizarCliente(@PathVariable Long clienteId, @Valid @RequestBody ClienteRequest cliente){
         return clienteRepository.findById(clienteId)
                 .map(client -> {
-                    cliente.setId(client.getId());
-                    return catalogoClienteService.salvar(cliente);
+                    Cliente clienteEntity = clienteMapper.toEntity(cliente);
+                    clienteEntity.setId(client.getId());
+                    return clienteMapper.toResponse(catalogoClienteService.salvar(clienteEntity));
                 })
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
